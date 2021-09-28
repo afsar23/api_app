@@ -1,0 +1,35 @@
+body { padding-top: 5rem; }
+.starter-template { padding: 3rem 1.5rem; }
+#logout{ display:none; }
+
+/* bootstrap overrides */
+.col  {float:left; margin-bottom:20px}
+
+
+.debug {
+  max-width:400px;
+  color: red;
+  overflow-wrap: break-word !important;
+}
+
+/* CSS */
+
+.widget_sidebar {
+    border-radius: 12px;
+    padding:6px;    
+    top:0;
+    right:0;
+    position: fixed;
+    margin-top: 60px;
+    margin-right: 20px;
+    margin-bottom:20px;
+    margin-left:20px;
+    background-color: rgb(236, 243, 245);
+    }
+    
+    .widget_sidebar div {
+    padding: 6px;
+    font-size: 24px;
+    display: block;
+    }
+    

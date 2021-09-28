@@ -1,11 +1,7 @@
 <?php
 
+require_once "classes\all_classes.php";
 
-require_once "common_app_includes";
-
-if (!isset($cfg)) {
-    $cfg = new CommonConfig();
-}
 
 // load cookies
 
@@ -15,7 +11,6 @@ if (!isset($cfg)) {
 RunPage();
 
 /////
-
 
 function RunPage() {
 
@@ -34,6 +29,7 @@ function RunPage() {
 function PageContent() {
 
     echo file_get_contents("lorem_ipsum.html");
+    
 
 }
 

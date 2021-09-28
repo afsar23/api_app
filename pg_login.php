@@ -1,10 +1,6 @@
 <?php
 
-require_once "common_app_includes";
-
-if (!isset($cfg)) {
-    $cfg = new CommonConfig();
-}
+require_once "classes\all_classes.php";
 
 // load cookies
 
@@ -32,11 +28,19 @@ function RunPage() {
 
 function PageContent() {
 
+
     $api_url = '"api/get_token.php"';
+
+    loginform($api_url);
+
+   
+}
+
+function loginform($api_url) {
 
     $login_html = "
         <h2>Login</h2>
-        <form id='login_form' action='javascript:;' onsubmit='submitForm(this,".$api_url.");'>
+        <form id='login_form' action='javascript:;' onsubmit='submitForm(this,".$api_url.");'> 
             <div class='form-group'>
                 <label for='email'>Email address</label>
                 <input type='email' class='form-control' id='email' name='email' placeholder='Enter email' value='tom@mainsite.co.uk'>
@@ -53,5 +57,4 @@ function PageContent() {
     echo $login_html;
 
 }
-
 
