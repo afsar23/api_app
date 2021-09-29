@@ -5,12 +5,8 @@ use Afsar\lib\User;
 
 require_once "classes\all_classes.php";
 
-
 // load cookies
 
-// load request
-
-// 
 RunPage();
 
 /////
@@ -42,15 +38,16 @@ function PageContent() {
     ?>
     <script>
     //Build Tabulator
+    api_url = "api_controller.php?obj=user&operation=userlist";
+
     var axTable = new Tabulator("#example-table", {
-        height:"500px",
+        xheight:"500px",
         layout:"fitColumns",
-        ajaxURL:"api/get_userlist.php",
+        ajaxURL:api_url,
 
         pagination:"local",
         paginationSize:6,
         paginationSizeSelector:[3, 6, 8, 10],
-
 
         placeholder:"No Data Set",
         columns:[
@@ -70,7 +67,7 @@ function PageContent() {
         ],
         });
 
-        axTable.setData("api/get_userlist.php");
+        axTable.setData(api_url);
         
         </script>
 

@@ -1,4 +1,8 @@
 <?php
+namespace Afsar\lib;
+session_start();
+
+define("C_DEBUG",true);
 
 // show error reporting
 error_reporting(E_ALL);
@@ -6,14 +10,11 @@ error_reporting(E_ALL);
 // set your default time-zone
 date_default_timezone_set('Asia/Manila');       // Europe/London
 
-
-session_start();
-
 /** Define ABSPATH as this file's directory */
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', __DIR__ . '/' );
 }
-use \Afsar\lib\Config;
+use \Afsar\lib;
 
 
 require_once "clsConfig.php";
@@ -33,3 +34,8 @@ require_once 'php-jwt-master/src/JWT.php';
 
 global $cfg;
 $cfg = new Config();
+
+global $dbConn;
+// get database connection
+$dbConn = (new Database())->getConnection();
+

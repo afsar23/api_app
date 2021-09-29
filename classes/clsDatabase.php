@@ -21,7 +21,7 @@ class Database {
 	private $DB_port = 3306;
 	private $DB_port_ini;
 
-	public $conn;
+	private $conn;
 
 	// I think this is only needed 
 	//$DB_port_ini 	= parse_ini_file(php_ini_loaded_file ( ))["mysqli.default_port"];		// add the port from the host information
@@ -44,7 +44,6 @@ class Database {
 			echo "Unable to connect to database<br/>";
 			echo $err->getMessage() . "<br/>";
 		}
-
 				
 		return $this->conn;
 	}

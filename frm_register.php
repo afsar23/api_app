@@ -8,6 +8,7 @@ require_once "classes\all_classes.php";
 
 // 
 RunPage();
+PageLevelJs();
 
 /////
 
@@ -28,14 +29,38 @@ function RunPage() {
 
 function PageContent() {
 
-	$api_url = "api/get_userlist.php";
+	$api_url 	= "api_controller.php?obj=user&operation=get_token";
+	$jsCallBack = "postFormProcessing";
 
-
-	test_bs_jsonform();
-
+	test_bs_jsonform($api_url,$jsCallBack);
 }
 
-function test_bs_jsonform() {
+
+function PageLevelJs() {
+	?>
+
+	<script>
+
+	var postFormProcessing = function(response) {
+
+		if (response.status=="ok") {
+			if (response.data.jwt) {
+				alert("ooooo");
+				setCookie('jwt_token',response.data.jwt,1);
+			}
+		} else {
+			//alert("Login failure");
+		}
+
+	}
+
+	</script>
+
+	<?php
+}
+
+
+function test_bs_jsonform($api_url,$jsCallBack) {
 
 
 	?>
@@ -59,7 +84,6 @@ function test_bs_jsonform() {
                         <label class="custom-control-label" for="submitOnChange">Submit on change</label>
                     </div> 
                     
-
                 </div>
             </div>
 
@@ -165,7 +189,7 @@ function test_bs_jsonform() {
 			
             form_data = JSON.stringify(formData, null, 2)
             Form1Data.innerHTML = form_data
-            CallAPI('api/get_token.php',form_data)
+            CallAPI('<?php echo $api_url ?>',form_data, <?php echo $jsCallBack ?>)
 		}
 
 		// Control super_debug status in jsonform & update form once changed

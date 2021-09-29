@@ -6,45 +6,66 @@ use \Firebase\JWT\JWT;
 
 class Api {
 
-    public $request_data;
+    private $obj;
+    private $operation;
+    private $pdata;
 
-    public $token;
-    public $action;
+    private $token;
+    
+    public function __construct($obj, $operation, $pdata) {
 
-    public function Init_Request() {
-
-        // get posted data
-        $this->request_data = json_decode(file_get_contents("php://input"));
+        $this->obj          = $obj;
+        $this->operation    = $operation;
+        $this->pdata        = $pdata;
 
         // get jwt
-        $this->token  =   isset($this->request_data->jwt) ? $this->request_data->jwt : "";
-        $this->action =   isset($this->request_data->action) ? $this->request_data->action : "";
-
-        return;
-    }
-
-    // all apis file will send a response back through this function
-    public function Send_Response($response) {
-
-        // required headers
-        //
-        //header("Access-Control-Allow-Origin: http://localhost/rest-api-authentication-example-level-2/");
-        header("Access-Control-Allow-Origin: *");
-        header("Content-Type: application/json; charset=UTF-8");
-        header("Access-Control-Allow-Methods: POST");
-        header("Access-Control-Max-Age: 3600");
-        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-        // set response code
-        // always postively send a an ok status (200)
-        http_response_code(200);           // eg 200 success; 401 - fail...
+        $this->token  =   isset($this->pdata->jwt) ? $this-pdata->jwt : "";
         
-        echo json_encode($response); 
-
         return;
     }
 
+    function processApi() {
+    
+		/*
+        if (empty($this->pdata))    {
+			return [
+					"status" 		=> 501,
+					"statusText"	=> "No data posted!" 
+			];
+		}
+        */
 
+        switch ($this->obj) {
+            case 'user'         :    $user = new User($this->pdata); break;
+            
+            // other cases here        
+        }
+      
+        try {
+            switch ($this->operation) {
+    
+                case 'get_token'                : $response = $user->get_token();           break;
+                case 'create'                   : $response = $user->creat();               break;
+                case 'userlist'                 : $response = $user->userList();            break;
+                //other cases here
+    
+                default:
+                    $response = [ "status"        => "error",
+                                "message"       => "Api request not found"
+                            ];
+                    break;
+            }
+    
+        } catch (Exception $e) {
+            $response = [ "status"        => "error",
+                        "message"       => $e->getMessage()
+            ];
+        }
+    
+        return $response;
+    
+    }
+    
     function loggedIn() {
         // if jwt is not empty
         $payload = "";

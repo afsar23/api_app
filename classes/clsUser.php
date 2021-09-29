@@ -1,16 +1,17 @@
 <?php
 
 namespace Afsar\lib;
-use \PDO;
 
+use \PDO;
+use \Firebase\JWT\JWT;
+use Afsar\lib;
 
 class User {
 
     // database connection and table name
     private $conn;
-    private $table_name;
-	
-	
+	private $table_name;
+		
     // object properties
 	public $id;
 	public $firstname;
@@ -19,11 +20,70 @@ class User {
 	public $access_level;
 	public $password;
 
+	private $pdata;
+
 	// constructor
-    public function __construct($db){
+    public function __construct($pdata) {
 		
-		$this->conn = $db;
-		$this->table_name = "api_"."users";
+		global $cfg;
+		global $dbConn;
+
+		$this->conn = $dbConn;
+		$this->pdata = $pdata;
+		
+		// as this child class has a constructor, we have to explicitly call the parent constructor
+		//parent::__construct();   
+
+		$this->table_name = $cfg->tab_prefix."users";
+
+	}
+
+
+	public function get_token() {
+
+		global $cfg;
+
+		$this->email = $this->pdata->email;
+		$email_exists = $this->emailExists();
+
+		// check if email exists and if password is correct
+		if($email_exists && password_verify($this->pdata->password, $this->password)){
+
+			$token = array(
+				"iat" => $cfg->jwt_issued_at,
+				"exp" => $cfg->jwt_expiration_time,
+				"iss" => $cfg->jwt_issuer,
+				"data" => array(
+					"id" => $this->id,
+					"firstname" => $this->firstname,
+					"lastname" => $this->lastname,
+					"email" => $this->email,
+					"access_level" => $this->access_level
+				)
+			);
+
+			// generate jwt
+			$jwt = JWT::encode($token, $cfg->jwt_key);
+			
+			$response_data = array("userinfo"  => $token["data"],
+							"jwt"=>$jwt
+						);
+						
+			return [ 	"status"        =>  "ok",
+						"message"       =>  "*** Login extremely successful ***!",
+						"data"          =>  $response_data
+				];
+
+		}
+
+		// login failed
+		else {
+			
+			return [ 	"status"      	=>  "error",
+						"message"       =>  "*** Invalid login ***"
+					];
+
+		}
 
 	}
 
@@ -295,12 +355,16 @@ class User {
 		$stmt->bindParam(':password', $password_hash);
 
 		// execute the query, also check if query was successful
-        if($stmt->execute()){
-            return true;
-        }
-
-        return false;
-    }
-
+        if($stmt->execute()) {
+			$reponse_data = [	"status"		=> "ok",
+								"message"		=> "Registration successfull",
+								"userid"		=> $this->conn->lastInsertId()
+							];
+    	} else {
+			$reponse_data = [	"status"		=> "error",
+								"message"		=> $this->conn->errorInfo(),
+							];
+		}
+	}						
 }
-?>
+

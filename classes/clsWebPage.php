@@ -1,5 +1,6 @@
 <?php
 
+use Afsar\lib;
 
 class WebPage {
 
@@ -23,8 +24,8 @@ class WebPage {
     // constructor
     public function __construct() {
         
-        $this->Title        = "Some Page Title";
-        $this->SubTitle     = "Page Sub Heading";
+        $this->Title        = "";
+        $this->SubTitle     = "";
         $this->ShowHdr      = true;
         $this->ShowFtr      = true;
         $this->ShowSidebar1 = true;
@@ -41,10 +42,7 @@ class WebPage {
 
         $this->html_header();
    
-        //$this->PageHeader();
-
         $this->SiteLayout1();
-
         //$this->SiteLayout2();
  
         $this->html_footer();
@@ -161,9 +159,10 @@ class WebPage {
     }
     private function ContentLayout() {
 
+        $this->PageHeader();
     ?>
-    
-        <div class="col" style='border:2px solid red'>         
+
+        <div class="col">         
     
             <!-- where prompt / messages will appear -->
             <div id="response"></div>
@@ -181,25 +180,35 @@ class WebPage {
             </div>    
     
         </div>
-    
-        <div class="col" style='border:2px solid green'>              
-            <h5>Debug Information</h5>
-            <h6>API URL</h6><div id="api_url"></div>
-            <h6>API POST DATA</h6><div id="api_post"></div>    
-            <h6>API RESPONSE</h6><div id="api_response" class="debug"></div>
-            <h6>COOKIE TOKEN</h6><div id="cookie_token" class="debug"></div>
-        </div>
-    
-    <?php
+
+        <?php   
+        
+        if (C_DEBUG) { 
+            echo '
+                <div class="col">              
+                    <h5>Debug Information</h5>
+                    <h6>api url:</h6><div id="api_url"></div>
+                    <h6>api post data</h6><div id="api_post"></div>    
+                    <h6>cookie token</h6><div id="cookie_token" class="debug"></div>
+                    <h6>api response</h6><div id="api_response" class="debug"></div>
+                </div>
+            ';
+        }
+
     }
         
 
     private function PageHeader() {
 
-        echo "
-            <h2>".$this->Title."</h2>
-            <h3>".$this->SubTitle."</h3>
-        ";
+        ?>
+
+        <div class="page-header">
+        <h1><?=$this->Title;?>
+                 <small><?=$this->SubTitle;?></small>
+        </h1> 
+        </div>
+        
+        <?php
 
     }
 
@@ -278,7 +287,7 @@ class WebPage {
                     <a class="nav-item nav-link" href="index.php">Home</a>
                     <a class="nav-item nav-link" href="pg_userlist.php">User List</a>
                     <a class="nav-item nav-link" href="frm_sample.php">Sample Form</a>
-                    <a class="nav-item nav-link" href="frm_register.php">Register</a>
+                    <a class="nav-item nav-link" href="pg_register.php">Register</a>
                     <a class="nav-item nav-link" href="pg_login.php">Login</a>
                     <a class="nav-item nav-link" href="pg_login.php">Logout</a>
                 </div>
@@ -306,7 +315,6 @@ class WebPage {
 
                 // A $( document ).ready() block.
                 $( document ).ready(function() {
-                    console.log( "ready!" );
                     $("#cookie_token").html(getCookie("jwt_token"));        
                 });
 

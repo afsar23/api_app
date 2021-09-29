@@ -12,6 +12,8 @@ class Config {
     public $jwt_expiration_time;
     public $jwt_issuer;
 
+    public $tab_prefix;
+
 	// constructor
     public function __construct() {
 		
@@ -23,6 +25,7 @@ class Config {
         $this_jwt_expiration_time = $this_jwt_issued_at + (60 * 60); // valid for 1 hour
         $this_jwt_issuer = $this->home_url;
 
+        $this->tab_prefix = "api_";
 	}
    
 }

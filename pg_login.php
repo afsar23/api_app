@@ -29,18 +29,36 @@ function RunPage() {
 function PageContent() {
 
 
-    $api_url = '"api/get_token.php"';
+    $api_url        = "api_controller.php?obj=user&operation=get_token";
+    $jsCallBack     = "postFormProcessing";
 
-    loginform($api_url);
+    loginform($api_url,$jsCallBack);
 
-   
+    PageLevelJs();
+
 }
 
-function loginform($api_url) {
+function PageLevelJs() {
 
-    $login_html = "
-        <h2>Login</h2>
-        <form id='login_form' action='javascript:;' onsubmit='submitForm(this,".$api_url.");'> 
+	?>
+	<script>
+	function postFormProcessing(response) {
+        setCookie('jwt_token',"<null>",1);    // clear the cook
+		if (response.status=="ok") {
+			if (response.data.jwt) {
+				setCookie('jwt_token',response.data.jwt,1);
+    		}
+        }
+        $("#cookie_token").html(getCookie("jwt_token")); 
+	}
+	</script>
+	<?php
+}
+
+function loginform($api_url,$jsCallBack) {
+
+    ?>
+        <form id='login_form' action='javascript:;' onsubmit="submitForm(this,'<?=$api_url?>',<?=$jsCallBack?>);"> 
             <div class='form-group'>
                 <label for='email'>Email address</label>
                 <input type='email' class='form-control' id='email' name='email' placeholder='Enter email' value='tom@mainsite.co.uk'>
@@ -52,9 +70,8 @@ function loginform($api_url) {
              </div>
             <button type='submit' class='btn btn-primary'>Login</button>
         </form>
-        ";
 
-    echo $login_html;
-
+    <?php
+    
 }
 
