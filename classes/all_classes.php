@@ -16,7 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 use \Afsar\lib;
 
-
 require_once "clsConfig.php";
 require_once 'clsDatabase.php';
 require_once 'clsUser.php';

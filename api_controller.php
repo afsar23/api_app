@@ -1,5 +1,7 @@
 <?php
 namespace Afsar\lib;
+
+
 /** 
  * Entry point for all externally initiated api request (client on same or other domain) 
  * 
@@ -22,13 +24,20 @@ $pdata      = json_decode(file_get_contents("php://input"));   // all the posted
             if ($DEBUG) {
                 // set up test data here...
                 $obj                = "user";
-                $operation          = "get_token";
-                $pdata              = json_decode('{"email":"tom@mainsite.co.uk","password":"tomcat"}',false);
+                $operation          = "create";
+                $pdata              = json_decode('{"firstname":"joe","lastname":"bloggs","email":"joe@mainsite.co.uk","password":"joe"}',false);
             }
 
-$api        = new Api($obj, $operation, $pdata);   
-$response   = $api->processApi();
-    
+try {
+    $api        = new Api($obj, $operation, $pdata);   
+    $response   = $api->processApi();
+}
+catch (\Throwable $e) {
+    $response = [   "status"        => "error",
+                    "message"       => $e->getMessage()
+    ];
+}
+
 // required headers
 //
 //header("Access-Control-Allow-Origin: http://localhost/rest-api-authentication-example-level-2/");

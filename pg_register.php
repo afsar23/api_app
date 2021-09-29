@@ -44,9 +44,7 @@ function PageLevelJs() {
 	<script>
 	function postFormProcessing(response) {
         if (response.status=="ok") {
-			if (response.data.jwt) {
-                // do something , eg redirect to login page?
-            }
+			// do something , eg redirect to login page?
         }
  	}
 	</script>
@@ -59,22 +57,22 @@ function RegForm($api_url,$jsCallBack) {
         <form id='reg_form' action='javascript:;' onsubmit="submitForm(this,'<?=$api_url?>',<?=$jsCallBack?>);"> 
             <div class="form-group">
                 <label for="firstname">Firstname</label>
-                <input type="text" class="form-control" name="firstname" id="firstname" required />
+                <input type="text" class="form-control" name="firstname" id="firstname" value="Fred" required />
             </div>
 
             <div class="form-group">
                 <label for="lastname">Lastname</label>
-                <input type="text" class="form-control" name="lastname" id="lastname" required />
+                <input type="text" class="form-control" name="lastname" id="lastname" value="Basset" required />
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" name="email" id="email" required />
+                <input type="email" class="form-control" name="email" id="email" value="fred@mainsite.co.uk" required />
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" id="password" required />
+                <input type="password" class="form-control" name="password" id="password" value="testing!" required />
             </div>
 
             <button type='submit' class='btn btn-primary'>Sign Up</button>

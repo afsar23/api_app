@@ -2,9 +2,12 @@
 
 namespace Afsar\lib;
 
-use \PDO;
 use \Firebase\JWT\JWT;
 use Afsar\lib;
+
+use \PDO;
+use \PDOException;
+use \Exception;
 
 class User {
 
@@ -338,11 +341,14 @@ class User {
         $stmt = $this->conn->prepare($query);
 
 		// sanitize
-		$this->firstname=htmlspecialchars(strip_tags($this->firstname));
-		$this->lastname=htmlspecialchars(strip_tags($this->lastname));
-		$this->email=htmlspecialchars(strip_tags($this->email));
-		$this->access_level=htmlspecialchars(strip_tags($this->access_level));
-		$this->password=htmlspecialchars(strip_tags($this->password));
+		$this->firstname=htmlspecialchars(strip_tags($this->pdata->firstname));
+		$this->lastname=htmlspecialchars(strip_tags($this->pdata->lastname));
+		$this->email=htmlspecialchars(strip_tags($this->pdata->email));
+		
+		//$this->access_level=htmlspecialchars(strip_tags($this->pdata->access_level));
+		$this->access_level=htmlspecialchars(strip_tags("Customer"));
+		
+		$this->password=htmlspecialchars(strip_tags($this->pdata->password));
 
 		// bind the values
         $stmt->bindParam(':firstname', $this->firstname);
@@ -355,16 +361,22 @@ class User {
 		$stmt->bindParam(':password', $password_hash);
 
 		// execute the query, also check if query was successful
-        if($stmt->execute()) {
-			$reponse_data = [	"status"		=> "ok",
-								"message"		=> "Registration successfull",
+			
+		$result = $stmt->execute();
+		if($result) {
+			$response_data = [	"status"		=> "ok",
+								"message"		=> "Registration successful",
 								"userid"		=> $this->conn->lastInsertId()
 							];
-    	} else {
-			$reponse_data = [	"status"		=> "error",
-								"message"		=> $this->conn->errorInfo(),
+		} else {
+			$response_data = [	"status"		=> "ok",
+								"message"		=> "Registration failed",
+								"userid"		=> $this->conn->errorInfo()
 							];
 		}
-	}						
+
+
+		return $response_data;
+	}
 }
 

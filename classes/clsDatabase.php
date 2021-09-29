@@ -2,6 +2,7 @@
 
 namespace Afsar\lib;
 use \PDO;
+use \PDOException;
 
 // used to get mysql database connection
 class Database {
@@ -30,21 +31,13 @@ class Database {
 	// get the database connection
 	public function getConnection(){
 
-		$this->conn = null;		
+		$this->conn = null;	
+
+		$this->conn = new PDO('mysql:host=' . $this->DB_host . ';port=' . $this->DB_port . '; dbname=' . $this->DB_name, $this->DB_user, $this->DB_pass);  
+		
+		$this->conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+		$this->conn->exec("SET CHARACTER SET utf8");  //  return all sql requests as UTF-8  
 	
-		try {
-
-			$this->conn = new PDO('mysql:host=' . $this->DB_host . ';port=' . $this->DB_port . '; dbname=' . $this->DB_name, $this->DB_user, $this->DB_pass);  
-			
-			$this->conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-			$this->conn->exec("SET CHARACTER SET utf8");  //  return all sql requests as UTF-8  
-
-		}
-		catch (PDOException $err) {  
-			echo "Unable to connect to database<br/>";
-			echo $err->getMessage() . "<br/>";
-		}
-				
 		return $this->conn;
 	}
 

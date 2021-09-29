@@ -38,14 +38,20 @@ class WebPage {
 
     public function RenderPage($pgCallBackFunction = "") {
  
-        $this->pgCallBack = $pgCallBackFunction;
-
-        $this->html_header();
-   
-        $this->SiteLayout1();
-        //$this->SiteLayout2();
- 
-        $this->html_footer();
+        try {
+            $this->pgCallBack = $pgCallBackFunction;
+            $this->html_header();
+            $this->SiteLayout1();
+            //$this->SiteLayout2();
+            $this->html_footer();
+        }
+        catch (\Throwable $e) {
+            echo "
+                <p>Oops!</p>
+                <p>error</p>
+                <p>".$e->getMessage()."</p>
+            ";
+       }
 
     }
 

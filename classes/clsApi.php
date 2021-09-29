@@ -26,42 +26,26 @@ class Api {
 
     function processApi() {
     
-		/*
-        if (empty($this->pdata))    {
-			return [
-					"status" 		=> 501,
-					"statusText"	=> "No data posted!" 
-			];
-		}
-        */
-
         switch ($this->obj) {
             case 'user'         :    $user = new User($this->pdata); break;
             
             // other cases here        
         }
       
-        try {
-            switch ($this->operation) {
-    
-                case 'get_token'                : $response = $user->get_token();           break;
-                case 'create'                   : $response = $user->creat();               break;
-                case 'userlist'                 : $response = $user->userList();            break;
-                //other cases here
-    
-                default:
-                    $response = [ "status"        => "error",
-                                "message"       => "Api request not found"
-                            ];
-                    break;
-            }
-    
-        } catch (Exception $e) {
-            $response = [ "status"        => "error",
-                        "message"       => $e->getMessage()
-            ];
+        switch ($this->operation) {
+
+            case 'get_token'                : $response = $user->get_token();           break;
+            case 'create'                   : $response = $user->create();               break;
+            case 'userlist'                 : $response = $user->userList();            break;
+            //other cases here
+
+            default:
+                $response = [ "status"        => "error",
+                            "message"       => "Api request not found"
+                        ];
+                break;
         }
-    
+      
         return $response;
     
     }
