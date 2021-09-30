@@ -204,27 +204,31 @@ class User {
 
 	public function userList(){
 
-		$from_record_num = 1;
+		$from_record_num = 0;				//  !!!!!!!! Must start at ZERO!!!!
 		$records_per_page = 999;
 
 		// select query
 		$query = "SELECT * 
 				FROM " . $this->table_name . " 
-				-- WHERE access_level='Customer'
-				ORDER BY created DESC
-				LIMIT ?, ?";
+				WHERE 1=1
+				-- AND access_level='Customer'
+				-- AND id = 4
+				ORDER BY id DESC
+				LIMIT :from_rec_num, :recs_per_page";
 
 		// prepare query statement
 		$stmt = $this->conn->prepare( $query );
 
 		// bind variable values
-		$stmt->bindParam(1, $from_record_num, PDO::PARAM_INT);
-		$stmt->bindParam(2, $records_per_page, PDO::PARAM_INT);
+		 $stmt->bindParam("from_rec_num", $from_record_num, PDO::PARAM_INT);
+		 $stmt->bindParam("recs_per_page", $records_per_page, PDO::PARAM_INT);
 
 		// execute query
 		$stmt->execute();
 
 		$dataset	=	$stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$stmt = null;
 
 		// return values from database
 		return $dataset;
@@ -361,8 +365,8 @@ class User {
 		$stmt->bindParam(':password', $password_hash);
 
 		// execute the query, also check if query was successful
-			
 		$result = $stmt->execute();
+
 		if($result) {
 			$response_data = [	"status"		=> "ok",
 								"message"		=> "Registration successful",
@@ -375,6 +379,8 @@ class User {
 							];
 		}
 
+		$this->stmt = null;	
+		$this->conn = null;
 
 		return $response_data;
 	}

@@ -32,7 +32,22 @@ function PageContent() {
     $api_url        = "api_controller.php?obj=user&operation=create";
     $jsCallBack     = "postFormProcessing";
 
-    RegForm($api_url,$jsCallBack);
+    ?>
+    <!-- Form display card w/ options -->
+    <div class="card shadow">
+        <div class="card-body">
+            <h5 class="card-title">Sign-up form</h5>
+            <?php
+            RegForm($api_url,$jsCallBack);
+            ?>
+        </div>
+        <div class="card-footer">
+            <div>Please ensure all manadatory details are completed</div>
+        </div>
+    </div>
+    <?
+
+    //RegForm($api_url,$jsCallBack);
 
     PageLevelJs();
 
@@ -45,6 +60,9 @@ function PageLevelJs() {
 	function postFormProcessing(response) {
         if (response.status=="ok") {
 			// do something , eg redirect to login page?
+            $('#api_response').html(JSON.stringify(response));
+        } else {
+            $('#response').html("<div class='alert alert-danger'>Registration failed. Email probably already registered.</div>");
         }
  	}
 	</script>

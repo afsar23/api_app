@@ -36,6 +36,11 @@ class Database {
 		$this->conn = new PDO('mysql:host=' . $this->DB_host . ';port=' . $this->DB_port . '; dbname=' . $this->DB_name, $this->DB_user, $this->DB_pass);  
 		
 		$this->conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+		$this->conn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
+		$this->conn->setAttribute( PDO::ATTR_PERSISTENT, false );
+
+		$this->conn->setAttribute(PDO::ATTR_AUTOCOMMIT,1);
+
 		$this->conn->exec("SET CHARACTER SET utf8");  //  return all sql requests as UTF-8  
 	
 		return $this->conn;

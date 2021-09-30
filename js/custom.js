@@ -35,7 +35,10 @@ function CallAPI(api_url, form_data,jsCallBack) {
                 $('#response').html("<div class='alert alert-danger'>" + result.message + "</div>");
         }
             // the call back function will normally live in the page script containing the form being processed
-            jsCallBack(result);
+            if (typeof jsCallBack === 'function') {
+                jsCallBack(result);
+            }
+         
     }   
     else {
         throw new Error(response.url + ": " + response.status + " - " + response.statusText);
