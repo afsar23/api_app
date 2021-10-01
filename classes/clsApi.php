@@ -26,6 +26,24 @@ class Api {
 
     function processApi() {
     
+        global $cfg;
+
+        if ( ($this->operation <> 'get_token') And ($this->operation <> 'create') )   {    // authentication not required for login and register
+            if ($cfg->token_validation["status"]=="error") {
+                return $cfg->token_validation;
+            }
+        }     
+
+        // we now global $UserInfo populated
+        // and we can check necessary user access before performing requested operation...
+
+
+
+
+        // instatiate an object of the class supplied in the variable $this->obj
+        //$classname=strtoupper($this->obj);  //.'Class';
+       // $user=new $classname($this->pdata);
+
         switch ($this->obj) {
             case 'user'         :    $user = new User($this->pdata); break;
             
@@ -35,7 +53,7 @@ class Api {
         switch ($this->operation) {
 
             case 'get_token'                : $response = $user->get_token();           break;
-            case 'create'                   : $response = $user->create();               break;
+            case 'create'                   : $response = $user->create();              break;
             case 'userlist'                 : $response = $user->userList();            break;
             //other cases here
 
@@ -49,67 +67,7 @@ class Api {
         return $response;
     
     }
-    
-    function loggedIn() {
-        // if jwt is not empty
-        $payload = "";
-
-        $jwt = $this->token;
-
-        if($jwt){
-            // if decode succeed, show user details
-            try {
-                // decode jwt
-                $payload = JWT::decode($jwt, $key, array('HS256'));
-            }
-            catch (Exception $e) {
-                $payload = ""; // do thing
-            }
-        }    
-        return $payload;
-    }
-
-    public function Validate_Token() {
-
-        // if jwt is not empty
-        $jwt = $this->token;
-
-        if($jwt){
-
-            // if decode succeed, show user details
-            try {
-                // decode jwt
-                $payload = JWT::decode($jwt, $key, array('HS256'));
-                http_response_code(200);
-                return $payload;  
-            }
-
-            // if decode fails, it means jwt is invalid
-            catch (Exception $e){
-
-                // set response code
-                http_response_code(401);
-
-                // tell the user access denied  & show error message
-                echo json_encode(array(
-                    "message" => "Access denied - Invalid Token",
-                    "error" => $e->getMessage()
-                ));
-            }
-        }
-
-        // show error message if jwt is empty
-        else{
-
-            // set response code
-            http_response_code(401);
-
-            // tell the user access denied
-            echo json_encode(array("message" => "Access denied - Missing Token"));
-        }
-
-    }
-
+ 
 
 } // end class api_handler
 

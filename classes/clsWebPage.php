@@ -33,7 +33,7 @@ class WebPage {
         $this->ShowSidebar3 = true;
         
         $this->LoremIpsum   = file_get_contents("lorem_ipsum.html");
-        
+ 
     }
 
     public function RenderPage($pgCallBackFunction = "") {
@@ -93,7 +93,7 @@ class WebPage {
         </body>
 
         <?php
-
+        
     }
 
 
@@ -201,8 +201,27 @@ class WebPage {
             ';
         }
 
+        echo $this->widgetUserInfo();
+
     }
         
+
+    private function widgetUserInfo() {
+
+        global $cfg;
+
+        $UserInfo = $cfg->UserInfo["firstname"].' '.$cfg->UserInfo["lastname"];
+        
+        $html = '
+                <div class="row">
+                <hr/>
+                <b>User Info:&nbsp;</b><span> '.$UserInfo.'</span>  
+                </div>       
+        ';
+
+        return $html;
+
+    }
 
     private function PageHeader() {
 

@@ -19,7 +19,8 @@ function CallAPI(api_url, form_data,jsCallBack) {
   fetch(api_url, {
     method: 'POST', // or 'PUT'
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type'  : 'application/json',
+      'Authorization' : 'Bearer ' + getCookie('jwt_token'),
     },
     body: form_data,
   })

@@ -9,7 +9,7 @@ use \PDO;
 use \PDOException;
 use \Exception;
 
-class User {
+class USER {
 
     // database connection and table name
     private $conn;
@@ -48,6 +48,9 @@ class User {
 
 		$this->email = $this->pdata->email;
 		$email_exists = $this->emailExists();
+			// debug
+			//return ["supplied_pwd"=>$this->pdata->password, "stored_user_pwd"=>$this->password];
+
 
 		// check if email exists and if password is correct
 		if($email_exists && password_verify($this->pdata->password, $this->password)){
@@ -66,7 +69,7 @@ class User {
 			);
 
 			// generate jwt
-			$jwt = JWT::encode($token, $cfg->jwt_key);
+			$jwt = JWT::encode($token, $cfg->jwt_key, $cfg->jwt_alg);
 			
 			$response_data = array("userinfo"  => $token["data"],
 							"jwt"=>$jwt
