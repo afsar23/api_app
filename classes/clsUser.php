@@ -9,7 +9,7 @@ use \PDO;
 use \PDOException;
 use \Exception;
 
-class USER {
+class User {
 
     // database connection and table name
     private $conn;
@@ -145,7 +145,7 @@ class USER {
 		return $stmt;
 	}
 
-	function delete(){
+	function delete() {
 
 		// delete query
 		$query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
@@ -160,11 +160,18 @@ class USER {
 		$stmt->bindParam(1, $this->id);
 
 		// execute query
-		if($stmt->execute()){
-			return true;
-		}
 
-		return false;
+		if($stmt->execute()) {
+			$response_data = [	"status"		=> "ok",
+								"message"		=> "User deleted",
+								"userid"		=> $this->conn->lastInsertId()
+							];
+		} else {
+			$response_data = [	"status"		=> "error",
+								"message"		=> "Deletion failed",
+								"userid"		=> $this->conn->errorInfo()
+							];
+		}
 
 	}
 	

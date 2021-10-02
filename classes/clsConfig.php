@@ -28,7 +28,7 @@ class Config {
         $this->jwt_key = "example_key";
         $this->jwt_alg = 'HS256';
         $this->jwt_issued_at = time();
-        $this->jwt_expiration_time = $this->jwt_issued_at + (60 * 60); // valid for 1 hour
+        $this->jwt_expiration_time = $this->jwt_issued_at + (24* 60 * 60); // valid for 1 day
                
         $this->jwt_issuer = $this->home_url;
         $this->tab_prefix = "api_";

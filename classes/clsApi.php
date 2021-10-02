@@ -54,7 +54,9 @@ class Api {
 
             case 'get_token'                : $response = $user->get_token();           break;
             case 'create'                   : $response = $user->create();              break;
+            case 'delete'                   : $response = $user->delete();              break;
             case 'userlist'                 : $response = $user->userList();            break;
+        
             //other cases here
 
             default:

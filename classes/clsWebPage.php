@@ -19,6 +19,7 @@ class WebPage {
     public $ftr_styles  = [];
 
     private $pgCallBack;
+    private $jsDocReady;
     private $LoremIpsum;
 
     // constructor
@@ -36,10 +37,11 @@ class WebPage {
  
     }
 
-    public function RenderPage($pgCallBackFunction = "") {
+    public function RenderPage($pgCallBackFunction = "", $jsDocReadyFunction = "")  {
  
         try {
             $this->pgCallBack = $pgCallBackFunction;
+            $this->jsDocReady = $jsDocReadyFunction;
             $this->html_header();
             $this->SiteLayout1();
             //$this->SiteLayout2();
@@ -168,7 +170,7 @@ class WebPage {
         $this->PageHeader();
     ?>
 
-        <div class="col">         
+        <div class="row">         
     
             <!-- where prompt / messages will appear -->
             <div id="response"></div>
@@ -187,21 +189,22 @@ class WebPage {
     
         </div>
 
-        <?php   
+        <div class="col">              
         
-        if (C_DEBUG) { 
-            echo '
-                <div class="col">              
-                    <h5>Debug Information</h5>
-                    <h6>api url:</h6><div id="api_url"></div>
-                    <h6>api post data</h6><div id="api_post"></div>    
-                    <h6>cookie token</h6><div id="cookie_token" class="debug"></div>
-                    <h6>api response</h6><div id="api_response" class="debug"></div>
-                </div>
-            ';
-        }
+            <?php 
+            if (C_DEBUG) { 
+                ?> 
+                <h5>Debug Information</h5>
+                <h6>api url:</h6><div id="api_url"></div>
+                <h6>api post data</h6><div id="api_post"></div>    
+                <h6>cookie token</h6><div id="cookie_token" class="debug"></div>
+                <h6>api response</h6><div id="api_response" class="debug"></div>
+                <?php 
+            }  ?>
+            <?=$this->widgetUserInfo();?>
+        </div>
 
-        echo $this->widgetUserInfo();
+       <?php
 
     }
         
@@ -210,16 +213,19 @@ class WebPage {
 
         global $cfg;
 
-        $UserInfo = $cfg->UserInfo["firstname"].' '.$cfg->UserInfo["lastname"];
+        if ($cfg->UserInfo["id"]!=0) {
+            $content =  $cfg->UserInfo["firstname"].' '.$cfg->UserInfo["lastname"];
+            $content = $content.'  (<a href="pg_logout">Logout</a>)'; 
+        } else {
+            $content = '<a href="pg_login.php">Login</a>';
+        }
         
         $html = '
-                <div class="row">
-                <hr/>
-                <b>User Info:&nbsp;</b><span> '.$UserInfo.'</span>  
-                </div>       
-        ';
-
-        return $html;
+                    <hr/>
+                    <b>'.$content.'</b>         
+            ';
+        
+    return $html;
 
     }
 
@@ -263,9 +269,12 @@ class WebPage {
                 <link  rel="stylesheet"href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         
 
-                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>        
+
+                <!-- http://labs.creative-area.net/jquery.datagrid/ -->
+                <script src="https://cdn.jsdelivr.net/npm/jquery.datagrid@0.2.3/jquery.datagrid.min.js"></script>
 
 
                 <!--link rel="stylesheet" href="css3rdparty/style.css"-->
@@ -336,21 +345,34 @@ class WebPage {
             echo '<link rel="stylesheet" type="text/css" href="'.$js.'" />';
         }
             
-        
+        $this->RenderJsDocReady();
+
+       echo "
+       </html>
+       ";
+
+    }
+
+
+    private function RenderJsDocReady() {
+
         ?>
-            <script>
 
-                // A $( document ).ready() block.
-                $( document ).ready(function() {
-                    $("#cookie_token").html(getCookie("jwt_token"));        
-                });
+        <script>
 
-            </script>
-
-            </html>
+        // A $( document ).ready() block.
+        $( document ).ready(function() {
+            $("#cookie_token").html(getCookie("jwt_token"));        
+            <?php
+            if ($this->jsDocReady!="") { 
+                echo $this->jsDocReady."();";
+            }
+            ?>            
+        });
+    
+        </script>
 
         <?php
-
     }
 
 }  // end of class AppPage
